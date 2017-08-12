@@ -43,7 +43,10 @@ class MyClass(object):
         try:
             pat=re.compile(self.pstr,re.S)
             m=pat.search(response.body.decode('gbk','ignore')) 
-            self.data_total.append(pd.DataFrame({'url':[response.effective_url],'id':[m.group(1)]}))
+            if m==None:
+                print('zhaobudao')
+            if m!=None:
+                self.data_total.append(pd.DataFrame({'url':[response.effective_url],'id':[m.group(1)]}))
         except:
             print("error")
     def savefile(self, response):
