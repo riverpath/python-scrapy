@@ -6,6 +6,8 @@ from tornado.httpclient import HTTPRequest
 import requests,re,json,time
 import pandas as pd
 import numpy as np
+from lxml import etree
+import codecs
 
 
 
@@ -39,17 +41,23 @@ class MyClass(object):
         self.headers=headers
     def find(self, response):
         if response.error:
-            print(response.error)
-        print(response.code, response.effective_url, response.request_time )
+            # print(response.error)
+            pass
+        # print(response.code, response.effective_url, response.request_time )
         try:
-            pat=re.compile(self.pstr,re.S)
-            m=pat.search(response.body.decode('gbk','ignore')) 
-            if m==None:
-                print('zhaobudao')
-            if m!=None:
-                self.data_total.append(pd.DataFrame({'url':[response.effective_url],'id':[m.group(1)]}))
+            tree=etree.HTML(response.body.decode('utf-8','ignore'))
+            a=tree.xpath('//*[@id="searchlist"]//em/text()')[0].strip()
+            b=tree.xpath('//*[@id="searchlist"]/table//a/text()')[0].strip()
+            c=tree.xpath('//*[@id="searchlist"]//span/text()')[1].strip().split('：')[1]
+            d=tree.xpath('//*[@id="searchlist"]//span/text()')[0].strip().split('：')[1]
+            e=''.join(tree.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[3]/text()')).strip().split('：')[1]
+            f=tree.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[2]/span/text()')[0].strip().split('：')[1]
+            g=tree.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[2]/text()')[0].strip().split('：')[1]
+            if tree!=None:
+                self.data_total.append(pd.DataFrame({'企业名称':[a],'法人代表':[b],'成立日期':[c],'注册资本':[d],'地址':[e],'邮箱':[f],'电话号码':[g]}))
         except:
-            print("error")
+            # print("error")
+            pass
     def savefile(self, response):
         if response.error:
             print(response.error)
