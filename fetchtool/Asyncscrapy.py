@@ -42,11 +42,10 @@ class MyClass(object):
         print(response.code, response.effective_url, response.request_time )
         try:
             pat=re.compile(self.pstr,re.S)
-            m=pat.search(response.body.decode('utf-8')) 
-            self.data_total.append(pd.DataFrame(json.loads(m.group(1))))
+            m=pat.search(response.body.decode('gbk','ignore')) 
+            self.data_total.append(pd.DataFrame({'url':[response.effective_url],'id':[m.group(1)]}))
         except:
             print("error")
-
     def savefile(self, response):
         if response.error:
             print(response.error)
