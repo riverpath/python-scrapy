@@ -26,8 +26,8 @@ class MyClass(object):
         request = HTTPRequest(url=url,
                             method='GET',
                             headers=self.headers,
-                            connect_timeout=20.0,
-                            request_timeout=60.0,
+                            connect_timeout=200.0,
+                            request_timeout=300.0,
                             follow_redirects=False,
                             max_redirects=False,
                             user_agent="Mozilla/5.0+(Windows+NT+6.2;+WOW64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Chrome/45.0.2454.101+Safari/537.36",)
@@ -38,17 +38,19 @@ class MyClass(object):
         self.headers=headers
     def find(self, response):
         if response.error:
-            print(response.error)
-        print(response.code, response.effective_url, response.request_time )
+            # print(response.error)
+            pass
+        # print(response.code, response.effective_url, response.request_time )
         try:
             pat=re.compile(self.pstr,re.S)
             m=pat.search(response.body.decode('gbk','ignore')) 
-            if m==None:
-                print('zhaobudao')
+            # if m==None:
+            #     print('zhaobudao')
             if m!=None:
                 self.data_total.append(pd.DataFrame({'url':[response.effective_url],'id':[m.group(1)]}))
         except:
-            print("error")
+            pass
+            # print("error")
     def savefile(self, response):
         if response.error:
             print(response.error)
