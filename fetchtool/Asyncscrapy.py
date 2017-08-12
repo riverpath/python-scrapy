@@ -10,7 +10,8 @@ import numpy as np
 
 
 URLS = ["http://data.stats.gov.cn/search.htm?s=CPI&m=searchdata&db=&p=" + str(i) for i in range(21)]
-
+with open('cookie.txt','r') as f:
+    cookie_data=f.read()
 class MyClass(object):
 
     def __init__(self):
@@ -19,7 +20,7 @@ class MyClass(object):
         self.data_total=[]
         self.headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
    'Accept-Language': 'zh-CN,zh;q=0.8',
-   'Accept-Encoding': 'gzip, deflate',}
+   'Accept-Encoding': 'gzip, deflate',"Cookie" : cookie_data}
     @coroutine  
     def get(self, url):
         #tornado会自动在请求首部带上host首部        
