@@ -1,9 +1,5 @@
-锘縠cho '脮媒脭脷脝么露炉'
+echo '正在启动'
 
-
-python 脤谩脠隆脢媒戮脻.py
-
-
-
+pyhton 提取数据.py
 
 pause
