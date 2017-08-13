@@ -1,3 +1,9 @@
-echo '正在启动'
-python 提取数据.py
+锘縠cho '脮媒脭脷脝么露炉'
+
+
+python 脤谩脠隆脢媒戮脻.py
+
+
+
+
 pause

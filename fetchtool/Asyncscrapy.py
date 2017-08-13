@@ -29,8 +29,8 @@ class MyClass(object):
         request = HTTPRequest(url=url,
                             method='GET',
                             headers=self.headers,
-                            connect_timeout=20.0,
-                            request_timeout=60.0,
+                            connect_timeout=300.0,
+                            request_timeout=600.0,
                             follow_redirects=False,
                             max_redirects=False,
                             user_agent="Mozilla/5.0+(Windows+NT+6.2;+WOW64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Chrome/45.0.2454.101+Safari/537.36",)
@@ -53,8 +53,9 @@ class MyClass(object):
             e=''.join(tree.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[3]/text()')).strip().split('：')[1]
             f=tree.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[2]/span/text()')[0].strip().split('：')[1]
             g=tree.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[2]/text()')[0].strip().split('：')[1]
+            h=response.effective_url
             if tree!=None:
-                self.data_total.append(pd.DataFrame({'企业名称':[a],'法人代表':[b],'成立日期':[c],'注册资本':[d],'地址':[e],'邮箱':[f],'电话号码':[g]}))
+                self.data_total.append(pd.DataFrame({'企业名称':[a],'法人代表':[b],'成立日期':[c],'注册资本':[d],'地址':[e],'邮箱':[f],'电话号码':[g],'网址':[h]}))
         except:
             # print("error")
             pass
