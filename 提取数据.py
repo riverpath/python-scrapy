@@ -1,7 +1,7 @@
 import fetchtool.Asyncfetch as myscrapy
 import pandas as pd
-data=pd.read_excel(u'zip.xls',0)
-urls=["https://www.qichacha.com/search?key=" + str(i) for i in data[u'企业名称']]
+# data=pd.read_excel(u'zip.xls',0)
+urls=["http://search.51job.com/list/000000,000000,0000,00,9,99,%E4%BF%9D%E5%81%A5%E5%93%81,2," + str(i) + ".html?lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=0&confirmdate=9&fromType=1&dibiaoid=0&address=&line=&specialarea=00&from=&welfare=" for i in range(1,320)]
 pstr=r'span class\="cust\-num"\>(.*?)\<'
-filename=u'qicha.xls'
+filename=u'51job.xls'
 myscrapy.fetch_text(urls,pstr,filename)
