@@ -48,9 +48,8 @@ class MyClass(object):
             tree=etree.HTML(response.body.decode('gbk','ignore'))
             a=tree.xpath('//*[@id="resultList"]/div/span[1]/a/text()')
             b=tree.xpath('//*[@id="resultList"]/div/span[1]/a/@href')
-            h=response.effective_url
             if tree!=None:
-                self.data_total.append(pd.DataFrame({'企业名称':[a],'URL':[b]}))
+                self.data_total.append(pd.DataFrame([{'企业名称':a[i],'URL':b[i]} for i in range(len(a))],index=range(len(a))))
         except:
             # print("error")
             pass
