@@ -43,13 +43,18 @@ class MyClass(object):
         if response.error:
             # print(response.error)
             pass
-        # print(response.code, response.effective_url, response.request_time )
+        # tree=etree.HTML(response.body.decode('utf-8'))    
+        # print(tree.xpath('//div[@class="link-line"]/a[4]/@href')[0].strip())            
         try:
-            tree=etree.HTML(response.body.decode('gbk','ignore'))
-            a=tree.xpath('//*[@id="resultList"]/div/span[1]/a/text()')
-            b=tree.xpath('//*[@id="resultList"]/div/span[1]/a/@href')
+            tree=etree.HTML(response.body.decode('utf-8','ignore'))
+            a=tree.xpath('//h1[@class="seo-important-title"]/text()')[0].strip()
+            b=tree.xpath('//div[@class="info-line"][2]/span[1]/a[2]/text()')[0].strip()
+            c=tree.xpath('//div[@class="info-line"][2]/span[2]/a[2]/text()')[0].strip()
+            d=tree.xpath('//div[@class="info-line"][2]/span[2]/a[1]/text()')[0].strip()
+            f=tree.xpath('//div[@class="link-line"]/a[4]/@href')[0].strip()
             if tree!=None:
-                self.data_total.append(pd.DataFrame([{'企业名称':a[i],'URL':b[i]} for i in range(len(a))],index=range(len(a))))
+                self.data_total.append(pd.DataFrame({'企业名称':[a],'行业':[b],'省区':[c],'市区':[d],'url':[f]}))
+                # self.data_total.append(pd.DataFrame([{'企业名称':a[i],'URL':b[i]} for i in range(len(a))],index=range(len(a))))
         except:
             # print("error")
             pass
