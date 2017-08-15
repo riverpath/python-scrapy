@@ -48,10 +48,12 @@ class MyClass(object):
         # print(a)
         try:
             tree=etree.HTML(response.body.decode('gbk','ignore'))
-            a=tree.xpath('//a[@offer-stat="com"]/text()')
-            b=tree.xpath('//a[@offer-stat="com"]/@href')
+            a=tree.xpath('//div[@class="contact-info"]/h4/text()')[0].strip()
+            b=tree.xpath('//div[@class="contcat-desc"]/dl[1]/dd[1]/text()')[0].strip()
+            c=tree.xpath('//div[@class="contcat-desc"]/dl[@class="m-mobilephone"]/dd/text()')[0].strip()
+            d=tree.xpath('//div[@class="contcat-desc"]//dd[@class]/text()')[0].strip()
             if tree!=None:
-                self.data_total.append(pd.DataFrame([{'企业名称':a[i].strip(),'URL':b[i].strip() + "/page/contactinfo.htm"} for i in range(len(a))],index=range(len(a))))
+                self.data_total.append(pd.DataFrame({'企业名称':[a],'电话':[b],'手机':[c],'地址':[d],'URL':[response.effective_url]}))
         except:
             # print("error")
             pass
