@@ -5,8 +5,9 @@ from urllib.parse import quote
 import re,json
 # 从api之中获取模块
 
-arg='http://s.hc360.com/?w=%CA%B3%C6%B7&mc=enterprise&ee=[[1,6,1]]&z=%D6%D0%B9%FA%3A%D5%E3%BD%AD%CA%A1'
-theme=u'慧聪公司'
+# arg='http://s.hc360.com/?w=%CA%B3%C6%B7&mc=enterprise&ee=[[1,101,1]]&z=%D6%D0%B9%FA%3A%D5%E3%BD%AD%CA%A1'
+arg='zip.xlsx'
+theme=u'慧聪联系'
 
 # xlst='xslt_bbs.xml'
 # print(apiurl)
@@ -23,7 +24,7 @@ class webclass(object):
     def seturlFromFile(self,fileName):
         self.fileName=fileName
         df=pd.read_excel(fileName,0)
-        self.urls=df[URL]
+        self.urls=df['URL']
 
 APIKey='9537dede351b975fa8e9dc67f57ea519'
 apiurl = "http://www.gooseeker.com/api/getextractor?key="+ APIKey +"&theme=" + quote(theme)
