@@ -44,7 +44,7 @@ class MyClass(object):
         try:
             doc=etree.HTML(response.body.decode(self.code,'ignore'))
             bbsExtra = gooseeker.GsExtractor() 
-            bbsExtra.setXsltFromFile(self.xlst)
+            bbsExtra.setXsltFromMem(self.xlst)
             result = bbsExtra.extract(doc) # 调用extract方法提取所需内容
             md5=hashlib.md5(response.effective_url.encode('utf-8')).hexdigest()
             with open( 'data/' + md5 + '.xml','wb') as f:
