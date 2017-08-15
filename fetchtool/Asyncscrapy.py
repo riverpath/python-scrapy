@@ -4,14 +4,9 @@ from tornado.ioloop import IOLoop
 from tornado.httpclient import AsyncHTTPClient, HTTPError
 from tornado.httpclient import HTTPRequest
 import requests,re,json,time
-import pandas as pd
-import numpy as np
 from lxml import etree
-import codecs
-
-
-
-URLS = ["http://data.stats.gov.cn/search.htm?s=CPI&m=searchdata&db=&p=" + str(i) for i in range(21)]
+from . import gooseeker
+import hashlib
 with open('cookie.txt','r') as f:
     cookie_data=f.read()
 class MyClass(object):
@@ -19,7 +14,6 @@ class MyClass(object):
     def __init__(self):
         #AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
         self.http = AsyncHTTPClient()
-        self.data_total=[]
         self.headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
    'Accept-Language': 'zh-CN,zh;q=0.8',
    'Accept-Encoding': 'gzip, deflate',"Cookie" : cookie_data}
@@ -35,42 +29,29 @@ class MyClass(object):
                             max_redirects=False,
                             user_agent="Mozilla/5.0+(Windows+NT+6.2;+WOW64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Chrome/45.0.2454.101+Safari/537.36",)
         yield self.http.fetch(request, callback=self.find, raise_error=False)
-    def set_pstr(self,pstr):
-        self.pstr=pstr
     def set_header(self,headers):
         self.headers=headers
+    def set_xlst(self,xlst):
+        self.xlst=xlst
+    def set_code(self,code):
+        self.code=code
     def find(self, response):
         if response.error:
             # print(response.error)
             pass
         # print(response.code, response.effective_url, response.request_time )
+        # print(self.xlst)
         try:
-            tree=etree.HTML(response.body.decode('gbk','ignore'))
-            a=tree.xpath('//*[@id="resultList"]/div/span[1]/a/text()')
-            b=tree.xpath('//*[@id="resultList"]/div/span[1]/a/@href')
-            if tree!=None:
-                self.data_total.append(pd.DataFrame([{'企业名称':a[i],'URL':b[i]} for i in range(len(a))],index=range(len(a))))
+            doc=etree.HTML(response.body.decode(self.code,'ignore'))
+            bbsExtra = gooseeker.GsExtractor() 
+            bbsExtra.setXsltFromFile(self.xlst)
+            result = bbsExtra.extract(doc) # 调用extract方法提取所需内容
+            md5=hashlib.md5(response.effective_url.encode('utf-8')).hexdigest()
+            with open( 'data/' + md5 + '.xml','wb') as f:
+                f.write(result)
         except:
-            # print("error")
-            pass
-    def savefile(self, response):
-        if response.error:
-            print(response.error)
-        print(response.code, response.effective_url, response.request_time )
-        try:
-            code=re.search(r'code=(.*?)&',response.effective_url)[1]
-            pat=re.compile(r"(\[\[.*?\]\])",re.S)
-            m=pat.search(response.body.decode('utf-8'))
-            tt=json.loads(m.group(1))
-            columns=[u"日期",u"开盘价",u"最高价",u"收盘价",u"最低价",u"成交量",u"涨跌额",u"涨跌幅",u"5日均价",u"10日均价",u"20日均价",u"5日均量",u"10日均量",u"20日均量",u"换手率"]
-            frame=DataFrame(tt,columns=columns)
-            frame[[u"开盘价",u"最高价",u"收盘价",u"最低价",u"成交量",u"涨跌额",u"涨跌幅",u"5日均价",u"10日均价",u"20日均价",u"换手率"]]=frame[[u"开盘价",u"最高价",u"收盘价",u"最低价",u"成交量",u"涨跌额",u"涨跌幅",u"5日均价",u"10日均价",u"20日均价",u"换手率"]].astype(float)
-            frame[u"5日均量"]=frame[u"5日均量"].str.replace(',','').astype(float)
-            frame[u"10日均量"]=frame[u"10日均量"].str.replace(',','').astype(float)
-            frame[u"20日均量"]=frame[u"20日均量"].str.replace(',','').astype(float)
-            frame.set_index([u'日期']).to_csv(code +'.csv')        
-        except:
-            print("error")    
+            print("error")
+            # pass
         
 class Download(object):
 
@@ -86,19 +67,11 @@ class Download(object):
         t = time.time() - t1
         print(t)
 
-    def data_concat(self,urls,pstr):
+    def data_concat(self,urls,xlst,code):
         self.set_url(urls)
-        self.a.set_pstr(pstr)
+        self.a.set_xlst(xlst)
+        self.a.set_code(code)
         loop = IOLoop.current()
         loop.run_sync(self.d)
-        self.data_total=pd.concat(self.a.data_total,axis=0,ignore_index=True,join='outer')
-if __name__ == '__main__':
-    dd = Download()
-    dd.data_concat(URLS,r'result":(\[.*?\])')
-    pp=dd.data_total.sort_values(by='sj')
-    pp['index']=range(len(pp))
-    pp.set_index(['index'])
-    pp.to_csv('cpi.csv')
-
 
 

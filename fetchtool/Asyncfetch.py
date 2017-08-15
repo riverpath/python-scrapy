@@ -1,8 +1,7 @@
 from . import Asyncscrapy
-def fetch_text(urls,pstr,filename):
+def fetch_text(urls,xlst,code):
     dd = Asyncscrapy.Download()
-    dd.data_concat(urls,pstr)
-    dd.data_total.to_csv(filename)
+    dd.data_concat(urls,xlst,code)
 
 if __name__ == '__main__':
     urls=["http://content.aetoscg.com/api/getEcoDataList.php?onDate=" + str(i) for i in range(20170101,20170130)]
