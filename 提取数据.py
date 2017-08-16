@@ -2,14 +2,15 @@ import fetchtool.Asyncfetch as myscrapy
 import pandas as pd
 from urllib import request
 from urllib.parse import quote
+from sys import argv
 import re,json
 # 从api之中获取模块
 
 # arg='http://s.hc360.com/?w=%CA%B3%C6%B7&mc=enterprise&ee=[[1,101,1]]&z=%D6%D0%B9%FA%3A%D5%E3%BD%AD%CA%A1'
-arg='zip.xlsx'
-theme=u'慧聪联系'
+file_main,theme,arg=argv
 
-# xlst='xslt_bbs.xml'
+# arg='zip.xlsx'
+# theme=u'慧聪联系'# xlst='xslt_bbs.xml'
 # print(apiurl)
 # 获取url地址
 class webclass(object):
