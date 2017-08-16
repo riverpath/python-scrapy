@@ -6,11 +6,12 @@ from sys import argv
 import re,json
 # 从api之中获取模块
 
-# arg='http://s.hc360.com/?w=%CA%B3%C6%B7&mc=enterprise&ee=[[1,101,1]]&z=%D6%D0%B9%FA%3A%D5%E3%BD%AD%CA%A1'
-file_main,theme,arg=argv
+# file_main,theme,arg=argv
 
-# arg='zip.xlsx'
-# theme=u'慧聪联系'# xlst='xslt_bbs.xml'
+with open('config.json','r',encoding='UTF-8') as f:
+    cnf=json.loads(f.read())
+arg=cnf['arg']    
+theme=cnf['theme']
 # print(apiurl)
 # 获取url地址
 class webclass(object):
