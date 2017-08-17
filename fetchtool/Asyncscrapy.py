@@ -51,6 +51,8 @@ class MyClass(object):
             md5=hashlib.md5(response.effective_url.encode('utf-8')).hexdigest()
             with open( self.dis +'/' + md5 + '.xml','wb+') as f:
                 f.write(result)
+            # with open( self.dis +'/' + md5 + '.html','wb+') as f:
+            #     f.write(response.body)  
         except:
             print("error")
             # pass
@@ -83,4 +85,5 @@ class Download(object):
         loop = IOLoop.current()
         loop.run_sync(self.d)
 
-
+if __name__=="__main__":
+    print('success')
