@@ -7,8 +7,7 @@ import requests,re,json,time
 from lxml import etree
 from . import gooseeker
 import hashlib
-with open('cookie.txt','r') as f:
-    cookie_data=f.read()
+
 class MyClass(object):
 
     def __init__(self):
@@ -16,7 +15,7 @@ class MyClass(object):
         self.http = AsyncHTTPClient()
         self.headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
    'Accept-Language': 'zh-CN,zh;q=0.8',
-   'Accept-Encoding': 'gzip, deflate',"Cookie" : cookie_data}
+   'Accept-Encoding': 'gzip, deflate'}
     @coroutine  
     def get(self, url):
         #tornado会自动在请求首部带上host首部        
@@ -35,6 +34,9 @@ class MyClass(object):
         self.xlst=xlst
     def set_code(self,code):
         self.code=code
+    def set_dis(self,dis):
+        self.dis=dis
+
     def find(self, response):
         if response.error:
             # print(response.error)
@@ -47,7 +49,7 @@ class MyClass(object):
             bbsExtra.setXsltFromMem(self.xlst)
             result = bbsExtra.extract(doc) # 调用extract方法提取所需内容
             md5=hashlib.md5(response.effective_url.encode('utf-8')).hexdigest()
-            with open( 'data/' + md5 + '.xml','wb+') as f:
+            with open( self.dis +'/' + md5 + '.xml','wb+') as f:
                 f.write(result)
         except:
             print("error")
@@ -59,6 +61,11 @@ class Download(object):
         self.a = MyClass()
     def set_url(self,urls):
         self.urls = urls
+    def make_cookie(self,cookie):
+        with open(cookie,'r') as f:
+            self.a.set_header={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
+   'Accept-Language': 'zh-CN,zh;q=0.8','Accept-Encoding': 'gzip, deflate',"Cookie":f.read()}
+
     @coroutine
     def d(self):
         print(r'基于tornado的并发抓取')        
@@ -67,10 +74,12 @@ class Download(object):
         t = time.time() - t1
         print(t)
 
-    def data_concat(self,urls,xlst,code):
+    def data_concat(self,urls,xlst,code,cookie,dis):
         self.set_url(urls)
         self.a.set_xlst(xlst)
         self.a.set_code(code)
+        self.a.set_dis(dis)
+        self.make_cookie(cookie)
         loop = IOLoop.current()
         loop.run_sync(self.d)
 
