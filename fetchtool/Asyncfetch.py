@@ -2,7 +2,7 @@ from . import Asyncscrapy
 import pandas as pd
 from urllib import request
 from urllib.parse import quote
-import re,json,time
+import re,json,time,pdb
 def fetch_text(urls,xlst,code,cookie,dis):
     dd = Asyncscrapy.Download()
     dd.data_concat(urls,xlst,code,cookie,dis)
@@ -26,12 +26,12 @@ class webclass(object):
     def setconfig(self,config):
         with open( "./爬虫配置/" + config + "/" + config + ".json",'r',encoding='UTF-8') as f:
             cnf=json.loads(f.read())
-        self.arg=cnf['arg']    
+        self.argurl=cnf['argurl']    
         self.cookie=cnf['cookie']
         self.web_code=cnf['code']
-        APIKey='9537dede351b975fa8e9dc67f57ea519'
-        theme=cnf['theme']
-        apiurl = "http://www.gooseeker.com/api/getextractor?key="+ APIKey +"&theme=" + quote(theme)
+        theme=cnf['theme'].split('&theme=')
+        theme[1]=quote(theme[1])
+        apiurl = '&theme='.join(theme)
         self.xlst=request.urlopen(apiurl).read()
 
     def run(self,arg):

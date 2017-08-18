@@ -6,7 +6,7 @@ import pdb,time
 file_main,theme=argv
 URLS=myscrapy.webclass()
 URLS.setconfig(theme)
-URLS.run(URLS.arg)
+URLS.run(URLS.argurl)
 
 myscrapy.fetch_text(URLS.urls,URLS.xlst,URLS.web_code,URLS.cookie,theme)
 

@@ -1,0 +1,6 @@
+{
+"argurl": "./爬虫配置/hh/hh.xlsx",
+"theme": "http://www.gooseeker.com/api/getextractor?key=9537dede351b975fa8e9dc67f57ea519&theme=true_path百度",
+"code":"utf-8",
+"cookie":"./爬虫配置/hh/hh.txt"
+}

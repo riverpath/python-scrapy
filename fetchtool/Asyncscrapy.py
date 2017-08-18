@@ -6,7 +6,7 @@ from tornado.httpclient import HTTPRequest
 import requests,re,json,time
 from lxml import etree
 from . import gooseeker
-import hashlib
+import hashlib,pdb
 
 class MyClass(object):
 

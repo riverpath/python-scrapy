@@ -7,7 +7,7 @@
 
 @IF EXIST "%~dp1" (
 	@echo '正在启动'
-	@python 提取数据.py "%1"
+	@python run.py "%1"
 ) ELSE (
 	@echo "请指定配置"
 )
